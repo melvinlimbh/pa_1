@@ -58,3 +58,11 @@ int (*builtin_command_func[])(char **) = {
     &shell_exit, // builtin_command_func[2]
     &shell_usage // builtin_command_func[3]
 };
+
+// helper functions
+void red();
+void yellow();
+void reset();
+void setup_program_path(char **args);
+void print_error_message(char **args);
+int exec_sys_prog(char **args);
