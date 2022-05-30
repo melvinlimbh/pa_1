@@ -194,7 +194,7 @@ int process_command(char **args)
 }
 
 /**
-   Read line from stdin, return it to the Loop function to tokenize it
+   Read line from stdin, return a pointer to the array containing the command string entered by the user
  */
 char *read_line_stdin(void)
 {
