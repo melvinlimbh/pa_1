@@ -170,8 +170,8 @@ int shell_usage(char **args)
 /**************************************************************/
 
 /**
-   Execute inputs when its in the default functions
-   Otherwise, print error message and return to loop
+   Call shell builtin functions if the command matches builtin_commands
+   Otherwise, execute the system program
  */
 int process_command(char **args)
 {
@@ -247,7 +247,7 @@ void main_loop(void)
   // instantiate local variables
   char *line;  // to accept the line of string from user
   char **args; // to tokenize them as arguments separated by spaces
-  int status;  // to tell the shell program whether to terminate shell or not
+  int status;  // if status == 1, prompt new user input. else, terminate the shell program.
 
   /** TASK 4 **/
   // write a loop where you do the following:
@@ -278,7 +278,7 @@ void main_loop(void)
     fflush(stdout); // clear the buffer and move the output to the console using fflush
 
     /***** BEGIN ANSWER HERE *****/
-    break; // remove this line when you work on this task
+    status = shell_exit(args); // remove this line when you work on this task
 
     /*********************/
   } while (status);
