@@ -38,10 +38,10 @@ int num_builtin_functions()
 /*
 The fundamental functions of the shell interface
 */
-void main_loop(void);
-char **tokenize_line_stdin(char *line);
-char *read_line_stdin(void);
-int process_command(char **args);
+char *read_line_stdin(void);            // TASK 1
+char **tokenize_line_stdin(char *line); // TASK 2
+int process_command(char **args);       // TASK 3
+void main_loop(void);                   // TASK 4
 
 /*
 Functions of the shell interface
