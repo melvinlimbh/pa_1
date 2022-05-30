@@ -6,7 +6,6 @@
 
 #include "system_program.h"
 
-// TODO: change to appropriate path
 char output_file_path[PATH_MAX];
 
 /*This function summons a daemon process out of the current process*/
