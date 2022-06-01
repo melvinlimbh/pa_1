@@ -116,6 +116,15 @@ int shell_usage(char **args)
 
   return 1;
 }
+
+/**
+  Returns 0, to terminate execution from the main_loop
+ */
+int shell_exit(char **args)
+{
+  return 0;
+}
+
 /**************************************************************/
 
 /**
