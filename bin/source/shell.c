@@ -46,7 +46,7 @@ int exec_sys_prog(char **args)
   }
 
   // This line will only be reached if execvp fails to create new process image
-  return 1;
+  return -1;
 }
 
 /****************** Internal Shell Functions ************************/
@@ -76,31 +76,6 @@ int shell_cd(char **args)
    Prints out the usage and
    list of commands implemented
  */
-int shell_help(char **args)
-{
-  int i;
-  printf("CSEShell Interface\n");
-  printf("Usage: command arguments\n");
-  printf("The following commands are implemented within the shell:\n");
-
-  for (i = 0; i < num_builtin_functions(); i++)
-  {
-    printf("  %s\n", builtin_commands[i]); // print all the commands that have been implemented in the shell program
-  }
-
-  printf("This shell also supports: listdir, listdirall, summond, checkdaemon, find, and countline.\n");
-
-  return 1;
-}
-
-/**
-  Returns 0, to terminate execution from the main_loop
- */
-int shell_exit(char **args)
-{
-  return 0;
-}
-
 /*
   Builtin function implementations.
 */
@@ -108,7 +83,6 @@ int shell_usage(char **args)
 {
   int function_index = -1;
 
-  // Check if args[1] exists
   if (current_number_tokens < 2)
   {
     printf("Command not given. Type usage <command>.\n");
@@ -127,41 +101,16 @@ int shell_usage(char **args)
   switch (function_index)
   {
   case 0:
-    printf("Type: cd directory_name\n");
+    printf("Type: cd directory_name to change the current working directory of the shell\n");
     break;
   case 1:
-    printf("Type: help\n");
+    printf("Type: help for supported commands\n");
     break;
   case 2:
-    printf("Type: exit\n");
+    printf("Type: exit to terminate the shell gracefully\n");
     break;
   case 3:
-    printf("Type: usage command\n");
-    break;
-  case 4:
-    printf("Type: display filename\n");
-    break;
-  case 5:
-    printf("Type: countline filename\n");
-    break;
-  case 6:
-    printf("Type: listdir\n");
-    printf("Type: listdir -a to list all contents in the current dir and its subdirs\n");
-    break;
-  case 7:
-    printf("Type: listdirall\n");
-    break;
-  case 8:
-    printf("Type: find filename_keyword\n");
-    break;
-  case 9:
-    printf("Type: summond \n");
-    break;
-  case 10:
-    printf("Type: checkdaemon \n");
-    break;
-  default:
-    printf("Command %s not found\n", args[0]);
+    printf("Type: usage cd/help/exit\n");
     break;
   }
 
@@ -175,21 +124,23 @@ int shell_usage(char **args)
  */
 int process_command(char **args)
 {
+  int child_exit_status = -1;
   /** TASK 3 **/
 
   // 1. Check if args[0] is NULL. If it is, an empty command is entered, return 1
   // 2. Otherwise, check if args[0] is in any of our builtin_commands: cd, help, exit, or usage.
   // 3. If conditions in (2) are satisfied, call builtin shell commands, otherwise perform fork() to exec the system program. Check if fork() is successful.
-  // 4. For the child process, execute the appropriate functions depending on the command in args[0]. Pass char ** args to the function.
-  // 5. For the parent process, wait for the child process to complete and fetch the child's return value.
-  // 6. Return the child's return value to the caller of process_command
-  // 7. If args[0] is not in builtin_command, print out an error message to tell the user that command doesn't exist and return 1
+  // 4. For the child process, call exec_sys_prog(args) to execute the matching system program. exec_sys_prog is already implemented for you.
+  // 5. For the parent process, wait for the child process to complete and fetch the child's exit status value to child_exit_status
   // DO NOT PRINT ANYTHING TO THE OUTPUT
 
   /***** BEGIN ANSWER HERE *****/
 
   /*********************/
-
+  if (child_exit_status != 1)
+  {
+    printf("Command %s has terminated abruptly.\n", args[0]);
+  }
   return 1;
 }
 

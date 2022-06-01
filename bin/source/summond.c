@@ -84,7 +84,7 @@ int main(int argc, char **args)
     create_daemon();
 
     /* Open the log file */
-    openlog("customdaemon", LOG_PID, LOG_DAEMON);
+    openlog("summond", LOG_PID, LOG_DAEMON);
     syslog(LOG_NOTICE, "Daemon started.");
     closelog();
 
