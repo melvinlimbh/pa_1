@@ -118,6 +118,27 @@ int shell_usage(char **args)
 }
 
 /**
+   Prints out the usage and
+   list of commands implemented
+ */
+int shell_help(char **args)
+{
+  int i;
+  printf("CSEShell Interface\n");
+  printf("Usage: command arguments\n");
+  printf("The following commands are implemented within the shell:\n");
+
+  for (i = 0; i < num_builtin_functions(); i++)
+  {
+    printf("  %s\n", builtin_commands[i]); // print all the commands that have been implemented in the shell program
+  }
+
+  printf("This shell also supports: listdir, listdirall, summond, checkdaemon, find, and countline.\n");
+
+  return 1;
+}
+
+/**
   Returns 0, to terminate execution from the main_loop
  */
 int shell_exit(char **args)
