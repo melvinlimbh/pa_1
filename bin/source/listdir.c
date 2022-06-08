@@ -15,9 +15,9 @@ int execute(char **args)
             if (strcmp(token, "a") == 0)
             {
                 // call listdirall,
-                // execvp still need the ./shellPrograms because this was called
+                // execvp still need the ./bin because this was called
                 // by a process that was at the .. directory
-                if (execvp("./shellPrograms/listdirall", args) == -1)
+                if (execvp("./bin/listdirall", args) == -1)
                 {
                     perror("Failed to execute, command is invalid.");
                 }
