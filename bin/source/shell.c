@@ -1,5 +1,6 @@
 #include "shell.h"
 
+
 // vars to load system programs
 char output_file_path[PATH_MAX];
 char local_path[PATH_MAX] = "/bin/";
@@ -165,7 +166,32 @@ int process_command(char **args)
   // DO NOT PRINT ANYTHING TO THE OUTPUT
 
   /***** BEGIN ANSWER HERE *****/
+  if (args[0] == NULL)
+  {return 1;}
 
+  for (int i=0; i <num_builtin_functions(); i++)
+  {
+    if (strcmp(builtin_commands[i],args[0]) == 0)
+    {
+      return (builtin_command_func[i](args));
+    }
+  }
+
+  pid_t pid;
+  pid = fork();
+  if (pid < 0)
+    {return 1;}
+  
+  else if (pid == 0)
+  {exec_sys_prog(args);}
+
+  else //(pid > 0) in child process 
+    {
+      int status; 
+      waitpid(pid,&status, WUNTRACED); //parent
+      if (WIFEXITED(status))
+      {child_exit_status = WEXITSTATUS(status);}
+    }
   /*********************/
   if (child_exit_status != 1)
   {
@@ -180,7 +206,7 @@ int process_command(char **args)
 char *read_line_stdin(void)
 {
   size_t buf_size = SHELL_BUFFERSIZE;           // size of the buffer
-  char *line = malloc(sizeof(char) * buf_size); // allocate memory space for the line*
+  char* line = malloc(sizeof(char) * buf_size); // allocate memory space for the line*
   /** TASK 1 **/
   // read one line from stdin using getline()
   // 1. Check that the char* returned by malloc is not NULL
@@ -189,14 +215,17 @@ char *read_line_stdin(void)
   // DO NOT PRINT ANYTHING TO THE OUTPUT
 
   /***** BEGIN ANSWER HERE *****/
-  if (line == NULL) 
-  {
-    return 0;
-  }
-
-  size_t characters = getline(&line, &buf_size, stdin);
-
   /*********************/
+  size_t chars;
+  
+  if (line == NULL)
+  {
+    exit(1);
+  }
+  else 
+  {
+    chars = getline(&line, &buf_size, stdin);
+  }
 
   return line;
 }
@@ -234,7 +263,7 @@ char **tokenize_line_stdin(char *line)
     token = strtok(NULL, SHELL_INPUT_DELIM);
     i++;
   }
-
+  current_number_tokens = i;
   /*********************/
 
   return tokens;
@@ -277,19 +306,61 @@ void main_loop(void)
     red();
     printf(" CSEShell\n↳ ");
     reset();
-    fflush(stdout); // clear the buffer and move the output to the console using fflush
+    fflush(stdout);
 
     /***** BEGIN ANSWER HERE *****/
-    status = shell_exit(args); // remove this line when you work on this task
+
+    line = read_line_stdin();
+    args = tokenize_line_stdin(line);
+    status = process_command(args);
+
+    if (status == 0) 
+    {shell_exit(args);}
+
+    else if (status ==1 )
+    {
+      free(args);
+      free(line);
+      
+    }
 
     /*********************/
   } while (status);
 }
 
+int main(int argc, char **argv)
+{
+
+  printf("CSEShell Run successful. Running now: \n");
+
+  // Setup path
+  if (getcwd(output_file_path, sizeof(output_file_path)) != NULL)
+  {
+    printf("Current working dir: %s\n", output_file_path);
+  }
+  else
+  {
+    perror("getcwd() error, exiting now.");
+    return 1;
+  }
+
+  // Run command loop
+  main_loop();
+
+  return 0;
+}
+
 // int main(int argc, char **argv)
 // {
 
-//   printf("CSEShell Run successful. Running now: \n");
+//   printf("Shell Run successful. Running now: \n");
+
+//   char *line = read_line_stdin();
+//   printf("The fetched line is : %s \n", line);
+
+//   char **args = tokenize_line_stdin(line);
+//   printf("The first token is %s \n", args[0]);
+//   printf("The second token is %s \n", args[1]);
 
 //   // Setup path
 //   if (getcwd(output_file_path, sizeof(output_file_path)) != NULL)
@@ -301,25 +372,7 @@ void main_loop(void)
 //     perror("getcwd() error, exiting now.");
 //     return 1;
 //   }
-
-//   // Run command loop
-//   main_loop();
+//   process_command(args);
 
 //   return 0;
 // }
-
-
-int main(int argc, char **argv)
-{
- 
- printf("Shell Run successful. Running now: \n");
- 
- char* line = read_line_stdin();
- printf("The fetched line is : %s \n", line);
- 
- char** args = tokenize_line_stdin(line);
- printf("The first token is %s \n", args[0]);
- printf("The second token is %s \n", args[1]);
- 
- return 0;
-}
