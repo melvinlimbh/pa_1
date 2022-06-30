@@ -167,7 +167,10 @@ int process_command(char **args)
 
   /***** BEGIN ANSWER HERE *****/
   if (args[0] == NULL)
-  {return 1;}
+  {
+    printf("No input");
+    return 1;
+  }
 
   for (int i=0; i <num_builtin_functions(); i++)
   {
@@ -179,19 +182,25 @@ int process_command(char **args)
 
   pid_t pid;
   pid = fork();
-  if (pid < 0)
-    {return 1;}
   
+  if (pid < 0)
+  {return 1;}
+
   else if (pid == 0)
-  {exec_sys_prog(args);}
+  {
+    int output = exec_sys_prog(args);
+    if (output == -1)
+    { exit(0); }
+  }
 
   else //(pid > 0) in child process 
-    {
-      int status; 
-      waitpid(pid,&status, WUNTRACED); //parent
-      if (WIFEXITED(status))
-      {child_exit_status = WEXITSTATUS(status);}
-    }
+  {
+    int status; 
+    waitpid(pid,&status, WUNTRACED); //parent
+    while(wait(NULL) > 0);
+    if (WIFEXITED(status))
+    {child_exit_status = WEXITSTATUS(status);}
+  }
   /*********************/
   if (child_exit_status != 1)
   {
@@ -216,16 +225,12 @@ char *read_line_stdin(void)
 
   /***** BEGIN ANSWER HERE *****/
   /*********************/
-  size_t chars;
-  
-  if (line == NULL)
+    if (line == NULL) 
   {
-    exit(1);
+    return 0;
   }
-  else 
-  {
-    chars = getline(&line, &buf_size, stdin);
-  }
+
+  size_t characters = getline(&line, &buf_size, stdin);
 
   return line;
 }
@@ -276,8 +281,8 @@ char **tokenize_line_stdin(char *line)
 void main_loop(void)
 {
   // instantiate local variables
-  char *line;  // to accept the line of string from user
-  char **args; // to tokenize them as arguments separated by spaces
+  //char *line;  // to accept the line of string from user
+  //char **args; // to tokenize them as arguments separated by spaces
   int status;  // if status == 1, prompt new user input. else, terminate the shell program.
 
   /** TASK 4 **/
@@ -306,24 +311,23 @@ void main_loop(void)
     red();
     printf(" CSEShell\n↳ ");
     reset();
-    fflush(stdout);
+    fflush(stdout); //clear the buffer and move the output to the console using fflush
 
     /***** BEGIN ANSWER HERE *****/
-
-    line = read_line_stdin();
-    args = tokenize_line_stdin(line);
+    char *line = read_line_stdin();
+    char **args = tokenize_line_stdin(line);
     status = process_command(args);
 
-    if (status == 0) 
-    {shell_exit(args);}
-
-    else if (status ==1 )
+    if (status == 1)
     {
-      free(args);
       free(line);
-      
+      free(args);
     }
+    //free(line);
+    //free(args);
 
+    else //ok
+    {break;}
     /*********************/
   } while (status);
 }
@@ -350,7 +354,31 @@ int main(int argc, char **argv)
   return 0;
 }
 
+// int main(int argc, char **argv) // task1
+// {
+ 
+//  char* line = read_line_stdin();
+//  printf("The fetched line is : %s \n", line);
+ 
+//  return 0;
+// }
+
 // int main(int argc, char **argv)
+// {
+ 
+//  printf("Shell Run successful. Running now: \n");
+ 
+//  char* line = read_line_stdin();
+//  printf("The fetched line is : %s \n", line);
+ 
+//  char** args = tokenize_line_stdin(line);
+//  printf("The first token is %s \n", args[0]);
+//  printf("The second token is %s \n", args[1]);
+ 
+//  return 0;
+// }
+
+// int main(int argc, char **argv) //task 3
 // {
 
 //   printf("Shell Run successful. Running now: \n");
@@ -362,7 +390,7 @@ int main(int argc, char **argv)
 //   printf("The first token is %s \n", args[0]);
 //   printf("The second token is %s \n", args[1]);
 
-//   // Setup path
+//   //Setup path
 //   if (getcwd(output_file_path, sizeof(output_file_path)) != NULL)
 //   {
 //     printf("Current working dir: %s\n", output_file_path);
