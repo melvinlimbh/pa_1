@@ -26,7 +26,44 @@ static int create_daemon()
     // 9. Return to main
     // DO NOT PRINT ANYTHING TO THE OUTPUT
     /***** BEGIN ANSWER HERE *****/
+    pid_t pid;
+    pid_t pid2;
+    int fd0, fd1, fd2;
 
+    pid = fork();
+
+    if (pid < 0)
+    {
+        return 1;
+    }
+    else if (pid == 0) // child process
+    {
+        setsid();
+        signal(SIGCHLD, SIG_IGN);
+        signal(SIGHUP, SIG_IGN);
+        pid2 = fork();
+        umask(0);
+        chdir("/");
+
+        /* Close all open file descriptors */
+        int x;
+        for (x = sysconf(_SC_OPEN_MAX); x>=0; x--)
+        {
+            close (x);
+        }
+        
+        /*
+        * Attach file descriptors 0, 1, and 2 to /dev/null. */
+        fd0 = open("/dev/null", O_RDWR);
+        fd1 = dup(0);
+        fd2 = dup(0);
+
+        exit(0);
+    }
+    else
+    {
+        exit(1);
+    }
     /*********************/
 
     return 0;
