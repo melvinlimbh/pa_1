@@ -57,8 +57,6 @@ static int create_daemon()
         fd0 = open("/dev/null", O_RDWR);
         fd1 = dup(0);
         fd2 = dup(0);
-
-        exit(0);
     }
     else
     {
