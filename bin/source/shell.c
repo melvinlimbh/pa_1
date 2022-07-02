@@ -167,17 +167,12 @@ int process_command(char **args)
 
   /***** BEGIN ANSWER HERE *****/
   if (args[0] == NULL)
-  {
-    printf("No input");
-    return 1;
-  }
+  {return 1;}
 
   for (int i=0; i <num_builtin_functions(); i++)
   {
     if (strcmp(builtin_commands[i],args[0]) == 0)
-    {
-      return (builtin_command_func[i](args));
-    }
+    {return (builtin_command_func[i](args));}
   }
 
   pid_t pid;
