@@ -34,13 +34,15 @@ int execute()
    int lines = 0;
 
    if (fptr == NULL)
-   { return 0;}
+   {return 0;}
 
    while ((chars = fgetc(fptr)) != EOF)
    {
       if (chars == '\n')
-      lines ++;
+      {lines ++;}
    }
+
+   fclose(fptr);
    live_daemons = lines;
    /*********************/
    if (live_daemons == 0)
