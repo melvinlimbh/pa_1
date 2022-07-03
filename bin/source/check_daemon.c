@@ -37,12 +37,12 @@ int execute()
    { return 0;}
 
    lines++;
-   while(chars = fgetc(fptr) != EOF)
+   while ((chars = fgetc(fptr)) != EOF)
    {
       if (chars == '\n')
       lines ++;
-      live_daemons++;
    }
+   live_daemons = lines;
    /*********************/
    if (live_daemons == 0)
       printf("No daemon is alive right now.\n");
