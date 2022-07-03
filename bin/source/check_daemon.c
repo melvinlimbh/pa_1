@@ -29,6 +29,20 @@ int execute()
 
    /***** BEGIN ANSWER HERE *****/
 
+   fptr = fopen("output.txt","r");
+   int chars = 0;
+   int lines = 0;
+
+   if (fptr == NULL)
+   { return 0;}
+
+   lines++;
+   while(chars = fgetc(fptr) != EOF)
+   {
+      if (chars == '\n')
+      lines ++;
+      live_daemons++;
+   }
    /*********************/
    if (live_daemons == 0)
       printf("No daemon is alive right now.\n");
