@@ -29,21 +29,16 @@ int execute()
 
    /***** BEGIN ANSWER HERE *****/
 
-   fptr = fopen("output.txt","r");
-   int chars = 0;
+   size_t reading = SHELL_BUFFERSIZE;
+   fptr = fopen("output.txt", "r");
+   char *line = malloc(sizeof(char)*reading);
    int lines = 0;
 
-   if (fptr == NULL)
-   {return 0;}
-
-   while ((chars = fgetc(fptr)) != EOF)
+   while (getline(&line,&reading,fptr) != -1)
    {
-      if (chars == '\n')
-      {lines ++;}
+      live_daemons++;
    }
-
-   fclose(fptr);
-   live_daemons = lines;
+   //live_daemons = lines;
    /*********************/
    if (live_daemons == 0)
       printf("No daemon is alive right now.\n");
