@@ -313,15 +313,10 @@ void main_loop(void)
     char **args = tokenize_line_stdin(line);
     status = process_command(args);
 
-    if (status == 1)
-    {
-      free(line);
-      free(args);
-    }
-    //free(line);
-    //free(args);
+    free(line);
+    free(args);
 
-    else //ok
+    if (status != 1)
     {break;}
     /*********************/
   } while (status);
