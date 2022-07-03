@@ -264,6 +264,7 @@ char **tokenize_line_stdin(char *line)
     i++;
   }
   current_number_tokens = i;
+  tokens[i] = NULL;
   /*********************/
 
   return tokens;
@@ -344,15 +345,6 @@ int main(int argc, char **argv)
   return 0;
 }
 
-// int main(int argc, char **argv) // task1
-// {
- 
-//  char* line = read_line_stdin();
-//  printf("The fetched line is : %s \n", line);
- 
-//  return 0;
-// }
-
 // int main(int argc, char **argv)
 // {
  
@@ -366,31 +358,4 @@ int main(int argc, char **argv)
 //  printf("The second token is %s \n", args[1]);
  
 //  return 0;
-// }
-
-// int main(int argc, char **argv) //task 3
-// {
-
-//   printf("Shell Run successful. Running now: \n");
-
-//   char *line = read_line_stdin();
-//   printf("The fetched line is : %s \n", line);
-
-//   char **args = tokenize_line_stdin(line);
-//   printf("The first token is %s \n", args[0]);
-//   printf("The second token is %s \n", args[1]);
-
-//   //Setup path
-//   if (getcwd(output_file_path, sizeof(output_file_path)) != NULL)
-//   {
-//     printf("Current working dir: %s\n", output_file_path);
-//   }
-//   else
-//   {
-//     perror("getcwd() error, exiting now.");
-//     return 1;
-//   }
-//   process_command(args);
-
-//   return 0;
 // }
