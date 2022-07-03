@@ -42,21 +42,32 @@ static int create_daemon()
         signal(SIGCHLD, SIG_IGN);
         signal(SIGHUP, SIG_IGN);
         pid2 = fork();
-        umask(0);
-        chdir("/");
 
-        /* Close all open file descriptors */
-        int x;
-        for (x = sysconf(_SC_OPEN_MAX); x>=0; x--)
+        if (pid2 < 0)
         {
-            close (x);
+            return 1;
         }
-        
-        /*
-        * Attach file descriptors 0, 1, and 2 to /dev/null. */
-        fd0 = open("/dev/null", O_RDWR);
-        fd1 = dup(0);
-        fd2 = dup(0);
+        else if (pid2 == 0)
+        {
+            umask(0);
+            chdir("/");
+            /* Close all open file descriptors */
+            int x;
+            for (x = sysconf(_SC_OPEN_MAX); x>=0; x--)
+            {
+                close (x);
+            }
+            
+            /*
+            * Attach file descriptors 0, 1, and 2 to /dev/null. */
+            fd0 = open("/dev/null", O_RDWR);
+            fd1 = dup(0);
+            fd2 = dup(0);
+        }
+        else
+        {
+            exit(1);
+        }
     }
     else
     {
