@@ -36,7 +36,6 @@ int execute()
    if (fptr == NULL)
    { return 0;}
 
-   lines++;
    while ((chars = fgetc(fptr)) != EOF)
    {
       if (chars == '\n')
